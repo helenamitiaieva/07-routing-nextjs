@@ -4,20 +4,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import css from './page.module.css';
 
-import SearchBox from '../../components/SearchBox/SearchBox';
-import Pagination from '../../components/Pagination/Pagination';
-import NoteList from '../../components/NoteList/NoteList';
-import Modal from '../../components/Modal/Modal';
-import NoteForm from '../../components/NoteForm/NoteForm';
 
 
-import type { Note } from '../../types/note';
 import { getNotes } from '@/lib/api';
+import { Note } from '@/types/note';
+import SearchBox from '@/components/SearchBox/SearchBox';
+import Pagination from '@/components/Pagination/Pagination';
+import NoteList from '@/components/NoteList/NoteList';
+import Modal from '@/components/Modal/Modal';
+import NoteForm from '@/components/NoteForm/NoteForm';
 
 interface NotesClientProps {
   initialPage: number;
   perPage: number;
   initialSearch: string;
+  tag?: string;
 }
 
 export default function NotesClient({

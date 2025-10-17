@@ -17,7 +17,7 @@ interface NotesResponse {
   totalPages: number
 }
 
-export const getNotes = async (params?: { page?: number; perPage?: number; search?: string }) => {
+export const getNotes = async (params?: { page?: number; perPage?: number; search?: string; tag?: string }) => {
   const { data } = await axios.get<NotesResponse>('/notes', { params })
   return data
 }

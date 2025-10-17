@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import css from '../page.module.css';
+import css from './NoteDetails.module.css';
 import { getSingleNote } from '@/lib/api';
 
 export default function NoteDetailsClient() {
