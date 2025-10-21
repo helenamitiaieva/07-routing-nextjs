@@ -4,8 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import css from './page.module.css';
 
-
-
 import { getNotes } from '@/lib/api';
 import { Note } from '@/types/note';
 import SearchBox from '@/components/SearchBox/SearchBox';
@@ -32,28 +30,27 @@ export default function NotesClient({
   const [debouncedSearch] = useDebounce(search, 400);
 
   const { data, isLoading, isError, refetch } = useQuery({
-  queryKey: ['notes', debouncedSearch, page],
-  queryFn: () => getNotes({ page, perPage, search: debouncedSearch }),
-  placeholderData: (previousData) => previousData,
-});
+    queryKey: ['notes', debouncedSearch, page],
+    queryFn: () => getNotes({ page, perPage, search: debouncedSearch }),
+    placeholderData: (prev) => prev,
+  });
 
   const notes: Note[] = data?.notes ?? [];
   const totalPages: number = data?.totalPages ?? 1;
 
-  const handleOpenModal = (): void => setIsModalOpen(true);
-  const handleCloseModal = (): void => setIsModalOpen(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleSearchChange = (value: string): void => {
+  const handleSearchChange = (value: string) => {
     setPage(1);
     setSearch(value);
   };
 
-  const handlePageChange = (newPage: number): void => {
-    setPage(newPage);
-  };
+  const handlePageChange = (newPage: number) => setPage(newPage);
 
-  const handleCreated = async (): Promise<void> => {
+  const handleCreated = async () => {
     await refetch();
+    handleCloseModal();
   };
 
   return (
@@ -78,17 +75,17 @@ export default function NotesClient({
       {isError && <p>Помилка при завантаженні</p>}
 
       {notes.length > 0 && (
-       <NoteList 
-          notes={notes} 
-          queryKey={['notes', debouncedSearch, page]} 
+        <NoteList
+          notes={notes}
+          queryKey={['notes', debouncedSearch, page]}
         />
       )}
 
-  {isModalOpen && (
-  <Modal onClose={handleCloseModal}>
-    <NoteForm onClose={handleCloseModal} onCreated={handleCreated} />
-  </Modal>
-)}
+      {isModalOpen && (
+        <Modal>
+          <NoteForm onClose={handleCloseModal} onCreated={handleCreated} />
+        </Modal>
+      )}
     </div>
   );
 }
