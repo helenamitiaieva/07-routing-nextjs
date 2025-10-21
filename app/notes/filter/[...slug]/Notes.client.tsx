@@ -82,10 +82,10 @@ export default function NotesClient({
       )}
 
       {isModalOpen && (
-        <Modal>
-          <NoteForm onClose={handleCloseModal} onCreated={handleCreated} />
-        </Modal>
-      )}
+      <Modal>
+        <NoteForm onClose={handleCloseModal} onCreated={handleCreated} />
+      </Modal>
+)}
     </div>
   );
 }
