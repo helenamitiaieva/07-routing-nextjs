@@ -2,45 +2,46 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useRouter } from 'next/navigation';
 import css from './Modal.module.css';
 
-type ModalProps = {
+export type ModalProps = {
   children: React.ReactNode;
-  onClose?: () => void;
+  onClose: () => void; 
 };
 
-export default function Modal({ children }: ModalProps) {
-  const router = useRouter();
+export default function Modal({ children, onClose }: ModalProps) {
   const [mounted, setMounted] = useState(false);
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+
     const host = document.createElement('div');
     host.setAttribute('data-modal-root', '');
     hostRef.current = host;
     document.body.appendChild(host);
-    setMounted(true);
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') router.back();
+      if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
 
     return () => {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
-      if (hostRef.current) document.body.removeChild(hostRef.current);
-      hostRef.current = null;
+      if (hostRef.current) {
+        document.body.removeChild(hostRef.current);
+        hostRef.current = null;
+      }
       setMounted(false);
     };
-  }, [router]);
+  }, [onClose]);
 
   const onBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.currentTarget === e.target) router.back();
+    if (e.currentTarget === e.target) onClose();
   };
 
   if (!mounted || !hostRef.current) return null;
